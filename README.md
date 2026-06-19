@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Verience CRM
+
+Production-ready Personal CRM for freelance web developers and agency owners.
+
+## Stack
+
+- **Next.js 15+** (App Router, Server Components, Server Actions)
+- **PostgreSQL** (Neon)
+- **Prisma ORM**
+- **Tailwind CSS + shadcn/ui**
+- **TanStack Table**, React Hook Form, Zod, Framer Motion
+- **Resend** (email reminders)
+- **Custom auth** (email + password, JWT session cookie)
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone and install
+
+```bash
+npm install
+```
+
+### 2. Environment variables
+
+Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | Neon PostgreSQL connection string (use pooled URL for serverless) |
+| `AUTH_SECRET` | Session signing secret (min 32 characters) |
+| `RESEND_API_KEY` | Resend API key |
+| `RESEND_FROM_EMAIL` | Verified sender address |
+| `CRON_SECRET` | Bearer token for Vercel Cron |
+
+Generate `AUTH_SECRET`:
+
+```bash
+openssl rand -base64 32
+```
+
+### 3. Database setup
+
+```bash
+npx prisma migrate dev --name init
+npx prisma db seed
+```
+
+Demo credentials after seeding:
+
+- **Email:** `demo@verience.dev`
+- **Password:** `password123`
+
+### 4. Run locally
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Neon
 
-## Learn More
+1. Create a project at [neon.tech](https://neon.tech)
+2. Copy the **pooled** connection string to `DATABASE_URL`
+3. Run migrations: `npx prisma migrate deploy`
 
-To learn more about Next.js, take a look at the following resources:
+### Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Connect your repository
+2. Set all environment variables from `.env.example`
+3. Build command (default works with `postinstall` hook): `prisma generate && next build`
+4. Cron job runs daily at 08:00 UTC via `vercel.json`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Resend
 
-## Deploy on Vercel
+1. Verify your sending domain
+2. Set `RESEND_FROM_EMAIL` to a verified address
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Client management** — search, sort, filter, bulk actions, slide-over detail panel
+- **Projects** — track scope, amounts, deadlines, status
+- **Invoices & payments** — outstanding/overdue calculations, revenue metrics
+- **Follow-ups** — list, kanban, and calendar views
+- **Email reminders** — automated 7-day, 3-day, due date, and overdue reminders
+- **Activity timeline** — audit log of all important actions
+- **Dashboard** — today's follow-ups, upcoming payments, attention list, revenue snapshot
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Production build |
+| `npm run db:migrate` | Run migrations (dev) |
+| `npm run db:deploy` | Deploy migrations (production) |
+| `npm run db:seed` | Seed demo data |
+| `npm run db:studio` | Open Prisma Studio |
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── (auth)/          # Login & register
+│   ├── (dashboard)/     # Protected app routes
+│   ├── actions/         # Server Actions
+│   └── api/cron/        # Scheduled reminders
+├── components/
+│   ├── ui/              # shadcn/ui
+│   ├── layout/          # Sidebar, header
+│   ├── clients/         # Table, slide-over
+│   ├── follow-ups/      # List, kanban, calendar
+│   └── dashboard/       # Widgets
+└── lib/
+    ├── auth/            # Password + session
+    ├── email/           # Resend integration
+    └── validations/     # Zod schemas
+```
