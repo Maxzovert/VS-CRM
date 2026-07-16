@@ -19,6 +19,7 @@ import {
   FileText,
   CreditCard,
   Mail,
+  History,
 } from "lucide-react";
 
 const pages = [
@@ -29,6 +30,7 @@ const pages = [
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/invoices", label: "Invoices", icon: FileText },
   { href: "/payments", label: "Payments", icon: CreditCard },
+  { href: "/activities", label: "Activity", icon: History },
   { href: "/templates", label: "Templates", icon: Mail },
 ];
 

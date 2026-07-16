@@ -8,8 +8,8 @@ import {
   Pencil,
 } from "lucide-react";
 import { ActivityType } from "@prisma/client";
+import { ClientNameLink } from "@/components/clients/client-name-link";
 import { formatRelative } from "@/lib/utils";
-import Link from "next/link";
 
 const activityIcons: Record<ActivityType, typeof UserPlus> = {
   CLIENT_ADDED: UserPlus,
@@ -93,12 +93,11 @@ export function ActivityFeed({
               <div className="flex items-center gap-1.5 mt-1">
                 {clientId && clientName && (
                   <>
-                    <Link
-                      href={`/clients/${clientId}`}
-                      className="text-caption text-[#6a6a6a] hover:text-[#0a0a0a] transition-colors"
-                    >
-                      {clientName}
-                    </Link>
+                    <ClientNameLink
+                      id={clientId}
+                      name={clientName}
+                      className="text-caption text-[#6a6a6a] hover:text-[#0a0a0a] font-normal"
+                    />
                     <span className="text-[#e5e5e5]">·</span>
                   </>
                 )}

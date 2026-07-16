@@ -15,7 +15,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn, formatDate } from "@/lib/utils";
 import { FollowUpStatus } from "@prisma/client";
-import Link from "next/link";
+import { ClientNameLink } from "@/components/clients/client-name-link";
 import { StatusBadge } from "@/components/shared/status-badge";
 
 type FollowUpItem = {
@@ -138,12 +138,11 @@ export function FollowUpCalendarView({ followUps }: { followUps: FollowUpItem[] 
                 className="rounded-xl border border-[#e5e5e5] bg-[#faf5e8]/50 p-4"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <Link
-                    href={`/clients/${f.client.id}`}
-                    className="text-sm font-medium text-[#0a0a0a] hover:underline"
-                  >
-                    {f.client.name}
-                  </Link>
+                  <ClientNameLink
+                    id={f.client.id}
+                    name={f.client.name}
+                    className="text-sm"
+                  />
                   <StatusBadge status={f.status} className="shrink-0" />
                 </div>
                 <p className="text-sm text-[#6a6a6a] mt-2 leading-relaxed">{f.note}</p>

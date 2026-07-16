@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,13 +31,34 @@ type ClientFormDialogProps = {
   onOpenChange: (open: boolean) => void;
   defaultValues?: Partial<ClientInput> & { id?: string };
   variant?: "leads" | "clients";
+  onSaved?: () => void;
 };
+
+function buildDefaults(
+  defaultValues: ClientFormDialogProps["defaultValues"],
+  isLeads: boolean
+): ClientInput {
+  return {
+    name: defaultValues?.name ?? "",
+    companyName: defaultValues?.companyName ?? "",
+    email: defaultValues?.email ?? "",
+    phone: defaultValues?.phone ?? "",
+    country: defaultValues?.country ?? "",
+    state: defaultValues?.state ?? "",
+    city: defaultValues?.city ?? "",
+    website: defaultValues?.website ?? "",
+    notes: defaultValues?.notes ?? "",
+    remark: defaultValues?.remark ?? "",
+    status: defaultValues?.status ?? (isLeads ? ClientStatus.LEAD : ClientStatus.ACTIVE),
+  };
+}
 
 export function ClientFormDialog({
   open,
   onOpenChange,
   defaultValues,
   variant = "leads",
+  onSaved,
 }: ClientFormDialogProps) {
   const isLeads = variant === "leads";
   const label = isLeads ? "Lead" : "Client";
@@ -47,19 +68,14 @@ export function ClientFormDialog({
 
   const form = useForm<ClientInput>({
     resolver: zodResolver(clientSchema),
-    defaultValues: {
-      name: defaultValues?.name ?? "",
-      companyName: defaultValues?.companyName ?? "",
-      email: defaultValues?.email ?? "",
-      phone: defaultValues?.phone ?? "",
-      country: defaultValues?.country ?? "",
-      state: defaultValues?.state ?? "",
-      city: defaultValues?.city ?? "",
-      website: defaultValues?.website ?? "",
-      remark: defaultValues?.remark ?? "",
-      status: defaultValues?.status ?? (isLeads ? ClientStatus.LEAD : ClientStatus.ACTIVE),
-    },
+    defaultValues: buildDefaults(defaultValues, isLeads),
   });
+
+  useEffect(() => {
+    if (open) {
+      form.reset(buildDefaults(defaultValues, isLeads));
+    }
+  }, [open, defaultValues, isLeads, form]);
 
   const onSubmit = form.handleSubmit((data) => {
     startTransition(async () => {
@@ -71,6 +87,7 @@ export function ClientFormDialog({
         toast.success(isEdit ? `${label} updated` : `${label} added`);
         onOpenChange(false);
         form.reset();
+        onSaved?.();
         router.refresh();
       } else {
         toast.error(result.error);
@@ -122,7 +139,20 @@ export function ClientFormDialog({
               <Input id="city" {...form.register("city")} className="h-11 rounded-xl" />
             </div>
           </div>
-          {isLeads && (
+          <div className="space-y-2">
+            <Label htmlFor="website">Website</Label>
+            <Input
+              id="website"
+              type="url"
+              placeholder="https://"
+              {...form.register("website")}
+              className="h-11 rounded-xl"
+            />
+            {form.formState.errors.website && (
+              <p className="text-xs text-[#ef4444]">{form.formState.errors.website.message}</p>
+            )}
+          </div>
+          {isLeads ? (
             <>
               <div className="space-y-2">
                 <Label>Status</Label>
@@ -147,7 +177,32 @@ export function ClientFormDialog({
                 <Textarea id="remark" {...form.register("remark")} rows={3} className="rounded-xl" />
               </div>
             </>
+          ) : (
+            isEdit && (
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={form.watch("status")}
+                  onValueChange={(v) => form.setValue("status", v as ClientStatus)}
+                >
+                  <SelectTrigger className="h-11 w-full rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[ClientStatus.ACTIVE, ClientStatus.INACTIVE].map((s) => (
+                      <SelectItem key={s} value={s}>
+                        {s.replace(/_/g, " ")}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )
           )}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea id="notes" {...form.register("notes")} rows={3} className="rounded-xl" />
+          </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="rounded-xl">
               Cancel

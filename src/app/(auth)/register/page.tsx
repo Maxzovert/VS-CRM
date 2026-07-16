@@ -1,4 +1,5 @@
 import { RegisterForm } from "@/components/auth/register-form";
+import { VerienceLogo } from "@/components/brand/verience-logo";
 import Link from "next/link";
 
 export default function RegisterPage() {
@@ -22,9 +23,7 @@ export default function RegisterPage() {
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="w-full max-w-sm space-y-8">
           <div className="space-y-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff4d8b] text-white font-semibold">
-              V
-            </span>
+            <VerienceLogo size={40} />
             <h1 className="text-display-sm text-[#0a0a0a] mt-4">Create account</h1>
             <p className="text-body-sm text-[#6a6a6a]">Start managing your clients</p>
           </div>

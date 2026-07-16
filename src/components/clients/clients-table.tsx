@@ -40,6 +40,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { cn, formatCurrency, formatDate, formatLocation } from "@/lib/utils";
 import { ClientSlideOver } from "./client-slide-over";
 import { ClientFormDialog } from "./client-form-dialog";
+import { ClientNameLink } from "./client-name-link";
 import { TransferFollowUpDialog } from "./transfer-follow-up-dialog";
 import { toast } from "sonner";
 
@@ -146,9 +147,12 @@ export function ClientsTable({
       accessorKey: "name",
       header: "Contact",
       cell: ({ row }) => (
-        <span className={cn("text-sm font-medium text-[#0a0a0a]", isLeads && "truncate block")}>
-          {row.original.name}
-        </span>
+        <ClientNameLink
+          id={row.original.id}
+          name={row.original.name}
+          className={cn("text-sm", isLeads && "truncate block")}
+          onClick={(e) => e.stopPropagation()}
+        />
       ),
     },
     {

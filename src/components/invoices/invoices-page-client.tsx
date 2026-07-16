@@ -36,7 +36,7 @@ import {
 import { StatusBadge } from "@/components/shared/status-badge";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { InvoiceStatus } from "@prisma/client";
-import Link from "next/link";
+import { ClientNameLink } from "@/components/clients/client-name-link";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -117,9 +117,11 @@ export function InvoicesPageClient({
               <TableRow key={inv.id}>
                 <TableCell className="py-2 text-sm font-medium truncate max-w-0">{inv.invoiceNumber}</TableCell>
                 <TableCell className="py-2 max-w-0 truncate">
-                  <Link href={`/clients/${inv.client.id}`} className="text-sm hover:underline">
-                    {inv.client.name}
-                  </Link>
+                  <ClientNameLink
+                    id={inv.client.id}
+                    name={inv.client.name}
+                    className="text-sm"
+                  />
                 </TableCell>
                 <TableCell className="py-2 text-sm font-mono tabular-nums">
                   {formatCurrency(Number(inv.amount))}

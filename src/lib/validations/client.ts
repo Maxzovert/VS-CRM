@@ -10,6 +10,7 @@ export const clientSchema = z.object({
   state: z.string().optional(),
   city: z.string().optional(),
   website: z.string().url().optional().or(z.literal("")),
+  notes: z.string().optional(),
   remark: z.string().optional(),
   status: z.nativeEnum(ClientStatus),
 });

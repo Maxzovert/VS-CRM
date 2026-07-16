@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import type { ActionResult } from "@/lib/utils";
 
@@ -30,10 +31,9 @@ export function LoginForm() {
         <Label htmlFor="password" className="text-sm font-medium text-[#0a0a0a]">
           Password
         </Label>
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
           required
           className="h-11 rounded-xl border-[#e5e5e5] bg-[#fffaf0] text-[#0a0a0a] focus-visible:ring-[#0a0a0a]"
         />

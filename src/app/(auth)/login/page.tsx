@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/auth/login-form";
+import { VerienceLogo } from "@/components/brand/verience-logo";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -30,9 +31,7 @@ export default function LoginPage() {
       <div className="flex flex-1 items-center justify-center p-8">
         <div className="w-full max-w-sm space-y-8">
           <div className="space-y-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#ff4d8b] text-white font-semibold">
-              V
-            </span>
+            <VerienceLogo size={40} />
             <h1 className="text-display-sm text-[#0a0a0a] mt-4">Welcome back</h1>
             <p className="text-body-sm text-[#6a6a6a]">Sign in to your CRM</p>
           </div>

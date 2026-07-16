@@ -148,7 +148,7 @@ export function DashboardContent({
           {attentionClients.length === 0 ? (
             <EmptyState message="All clients are in good standing" />
           ) : (
-            <div className="space-y-2">
+            <div className="max-h-[280px] space-y-2 overflow-y-auto pr-1">
               {attentionClients.map((c) => (
                 <Link
                   key={c.id}
@@ -157,7 +157,7 @@ export function DashboardContent({
                 >
                   <div className="min-w-0">
                     <p className="text-sm font-semibold truncate">{c.name}</p>
-                    <p className="text-body-sm text-[#6a6a6a]">{c.reason}</p>
+                    <p className="text-body-sm text-[#6a6a6a] truncate">{c.reason}</p>
                   </div>
                   <StatusBadge status={c.status} />
                 </Link>
@@ -166,8 +166,10 @@ export function DashboardContent({
           )}
         </Panel>
 
-        <Panel title="Recent Activity" href="/clients" index={3}>
-          <ActivityFeed activities={activities} compact />
+        <Panel title="Recent Activity" href="/activities" index={3}>
+          <div className="max-h-[280px] overflow-y-auto pr-1">
+            <ActivityFeed activities={activities} compact />
+          </div>
         </Panel>
       </div>
     </div>
@@ -206,7 +208,7 @@ function Panel({
           View all →
         </Link>
       </div>
-      <div className="p-5">{children}</div>
+      <div className="p-5 min-h-0">{children}</div>
     </div>
   );
 }

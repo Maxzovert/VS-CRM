@@ -18,6 +18,38 @@ export async function getRecentActivities(limit = 20) {
   });
 }
 
+export async function getActivities(params?: {
+  page?: number;
+  pageSize?: number;
+}) {
+  const session = await requireSession();
+  const page = Math.max(1, params?.page ?? 1);
+  const pageSize = Math.min(100, Math.max(1, params?.pageSize ?? 25));
+
+  const where = { userId: session.userId };
+
+  const [total, items] = await Promise.all([
+    db.activity.count({ where }),
+    db.activity.findMany({
+      where,
+      include: {
+        client: { select: { id: true, name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+  ]);
+
+  return {
+    items,
+    total,
+    page,
+    pageSize,
+    totalPages: Math.max(1, Math.ceil(total / pageSize)),
+  };
+}
+
 export async function getClientsRequiringAttention() {
   const session = await requireSession();
   await syncOverdueInvoices(session.userId);
@@ -61,7 +93,7 @@ export async function getClientsRequiringAttention() {
           ? "Overdue follow-up"
           : "Stale lead",
     }))
-    .slice(0, 8);
+    .slice(0, 5);
 }
 
 export async function getDashboardData() {
@@ -70,7 +102,7 @@ export async function getDashboardData() {
 
   const [revenue, activities, attentionClients] = await Promise.all([
     getRevenueStats(session.userId),
-    getRecentActivities(15),
+    getRecentActivities(6),
     getClientsRequiringAttention(),
   ]);
 
