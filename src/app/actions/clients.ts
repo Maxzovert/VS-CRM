@@ -5,7 +5,7 @@ import { ClientStatus, Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireSession } from "@/lib/auth/get-session";
 import { logActivity } from "@/lib/activity";
-import { getClientOutstandingAmount, syncOverdueInvoices } from "@/lib/finance";
+import { getClientOutstandingAmount, syncOverdueInvoices, toNumber } from "@/lib/finance";
 import { clientFilterSchema, clientSchema, transferToFollowUpSchema } from "@/lib/validations/client";
 import type { ActionResult } from "@/lib/utils";
 
@@ -26,6 +26,7 @@ export async function createClient(data: unknown): Promise<ActionResult<{ id: st
       state: parsed.data.state || null,
       city: parsed.data.city || null,
       website: parsed.data.website || null,
+      notes: parsed.data.notes || null,
       remark: parsed.data.remark || null,
       status: parsed.data.status,
       userId: session.userId,
@@ -73,6 +74,7 @@ export async function updateClient(
       state: parsed.data.state || null,
       city: parsed.data.city || null,
       website: parsed.data.website || null,
+      notes: parsed.data.notes || null,
       remark: parsed.data.remark || null,
       status: parsed.data.status,
     },
@@ -320,7 +322,29 @@ export async function getClientById(id: string) {
   if (!client) return null;
 
   const outstandingAmount = await getClientOutstandingAmount(id);
-  return { ...client, outstandingAmount };
+
+  // Prisma Decimal is not serializable across the RSC → client boundary
+  return {
+    ...client,
+    outstandingAmount,
+    projects: client.projects.map((p) => ({
+      ...p,
+      totalAmount: toNumber(p.totalAmount),
+      paidAmount: toNumber(p.paidAmount),
+    })),
+    invoices: client.invoices.map((inv) => ({
+      ...inv,
+      amount: toNumber(inv.amount),
+      payments: inv.payments.map((pay) => ({
+        ...pay,
+        amount: toNumber(pay.amount),
+      })),
+    })),
+    payments: client.payments.map((pay) => ({
+      ...pay,
+      amount: toNumber(pay.amount),
+    })),
+  };
 }
 
 export async function getClientOptions() {

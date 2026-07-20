@@ -12,17 +12,22 @@ import {
   CreditCard,
   Mail,
   Settings,
+  History,
+  Database,
 } from "lucide-react";
+import { VerienceLogo } from "@/components/brand/verience-logo";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/data", label: "Data", icon: Database },
   { href: "/leads", label: "Leads", icon: UserPlus },
   { href: "/follow-ups", label: "Follow-ups", icon: MessageSquare },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/invoices", label: "Invoices", icon: FileText },
   { href: "/payments", label: "Payments", icon: CreditCard },
+  { href: "/activities", label: "Activity", icon: History },
   { href: "/templates", label: "Templates", icon: Mail },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -34,9 +39,7 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-[240px] flex-col border-r border-[#e5e5e5] bg-[#fffaf0]">
       <div className="flex h-16 items-center px-6 border-b border-[#e5e5e5]">
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#ff4d8b] text-sm font-semibold text-white">
-            V
-          </span>
+          <VerienceLogo size={32} />
           <span className="text-sm font-semibold tracking-tight text-[#0a0a0a]">
             Verience
           </span>

@@ -19,16 +19,20 @@ import {
   FileText,
   CreditCard,
   Mail,
+  History,
+  Database,
 } from "lucide-react";
 
 const pages = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/data", label: "Data", icon: Database },
   { href: "/leads", label: "Leads", icon: UserPlus },
   { href: "/follow-ups", label: "Follow-ups", icon: MessageSquare },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/invoices", label: "Invoices", icon: FileText },
   { href: "/payments", label: "Payments", icon: CreditCard },
+  { href: "/activities", label: "Activity", icon: History },
   { href: "/templates", label: "Templates", icon: Mail },
 ];
 

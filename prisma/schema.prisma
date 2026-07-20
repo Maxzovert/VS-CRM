@@ -76,9 +76,29 @@ model User {
   updatedAt    DateTime @updatedAt
 
   clients        Client[]
+  dataEntries    DataEntry[]
   emailTemplates EmailTemplate[]
   emailLogs      EmailLog[]
   activities     Activity[]
+}
+
+model DataEntry {
+  id           String   @id @default(cuid())
+  userId       String
+  name         String
+  businessName String?
+  location     String?
+  instagram    String?
+  website      String?
+  remark       String?
+  leadClientId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, name])
 }
 
 model Client {

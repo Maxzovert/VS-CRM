@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import { FollowUpStatus } from "@prisma/client";
 import { updateFollowUpStatus } from "@/app/actions/follow-ups";
 import { SendEmailMenu } from "@/components/emails/send-email-menu";
+import { ClientNameLink } from "@/components/clients/client-name-link";
 import {
   Table,
   TableBody,
@@ -86,12 +86,11 @@ export function FollowUpListView({
             followUps.map((f) => (
               <TableRow key={f.id}>
                 <TableCell className="py-2 max-w-0">
-                  <Link
-                    href={`/clients/${f.client.id}`}
-                    className="text-sm font-medium hover:underline text-[#0a0a0a] truncate block"
-                  >
-                    {f.client.name}
-                  </Link>
+                  <ClientNameLink
+                    id={f.client.id}
+                    name={f.client.name}
+                    className="text-sm truncate block"
+                  />
                   {f.client.companyName && (
                     <p className="text-xs text-[#6a6a6a] truncate">{f.client.companyName}</p>
                   )}

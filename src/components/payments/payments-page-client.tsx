@@ -33,7 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import Link from "next/link";
+import { ClientNameLink } from "@/components/clients/client-name-link";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -113,9 +113,11 @@ export function PaymentsPageClient({
             {payments.map((p) => (
               <TableRow key={p.id}>
                 <TableCell className="py-2 max-w-0 truncate">
-                  <Link href={`/clients/${p.client.id}`} className="text-sm hover:underline">
-                    {p.client.name}
-                  </Link>
+                  <ClientNameLink
+                    id={p.client.id}
+                    name={p.client.name}
+                    className="text-sm"
+                  />
                 </TableCell>
                 <TableCell className="py-2 text-sm text-muted-foreground">
                   {p.invoice?.invoiceNumber ?? "—"}

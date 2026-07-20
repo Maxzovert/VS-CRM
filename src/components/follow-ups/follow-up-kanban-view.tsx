@@ -19,7 +19,7 @@ import { updateFollowUpStatus } from "@/app/actions/follow-ups";
 import { cn, formatDate } from "@/lib/utils";
 import { toast } from "sonner";
 import { useState } from "react";
-import Link from "next/link";
+import { ClientNameLink } from "@/components/clients/client-name-link";
 
 type FollowUpItem = {
   id: string;
@@ -53,13 +53,12 @@ function FollowUpCard({ item }: { item: FollowUpItem }) {
         isDragging && "opacity-50"
       )}
     >
-      <Link
-        href={`/clients/${item.client.id}`}
-        className="text-sm font-medium hover:underline"
+      <ClientNameLink
+        id={item.client.id}
+        name={item.client.name}
+        className="text-sm"
         onClick={(e) => e.stopPropagation()}
-      >
-        {item.client.name}
-      </Link>
+      />
       <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{item.note}</p>
       <p className="text-[11px] text-muted-foreground mt-1.5">{formatDate(item.nextFollowUpDate)}</p>
     </div>
