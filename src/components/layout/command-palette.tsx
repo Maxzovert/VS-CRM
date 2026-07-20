@@ -20,10 +20,12 @@ import {
   CreditCard,
   Mail,
   History,
+  Database,
 } from "lucide-react";
 
 const pages = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/data", label: "Data", icon: Database },
   { href: "/leads", label: "Leads", icon: UserPlus },
   { href: "/follow-ups", label: "Follow-ups", icon: MessageSquare },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },

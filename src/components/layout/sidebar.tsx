@@ -13,12 +13,14 @@ import {
   Mail,
   Settings,
   History,
+  Database,
 } from "lucide-react";
 import { VerienceLogo } from "@/components/brand/verience-logo";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/data", label: "Data", icon: Database },
   { href: "/leads", label: "Leads", icon: UserPlus },
   { href: "/follow-ups", label: "Follow-ups", icon: MessageSquare },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
