@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -60,6 +61,72 @@ const emptyForm: DataEntryInput = {
   website: "",
   remark: "",
 };
+
+function RemarkCell({ remark }: { remark: string | null | undefined }) {
+  const text = remark?.trim();
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [tooltip, setTooltip] = useState<{
+    top: number;
+    left: number;
+    placement: "top" | "bottom";
+  } | null>(null);
+
+  const showTooltip = useCallback(() => {
+    const el = triggerRef.current;
+    if (!el || !text) return;
+
+    const rect = el.getBoundingClientRect();
+    const maxWidth = Math.min(288, window.innerWidth - 32);
+    const left = Math.min(Math.max(16, rect.left), window.innerWidth - maxWidth - 16);
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const placement = spaceBelow < 100 && spaceAbove > spaceBelow ? "top" : "bottom";
+
+    setTooltip({
+      left,
+      top: placement === "top" ? rect.top - 8 : rect.bottom + 8,
+      placement,
+    });
+  }, [text]);
+
+  const hideTooltip = useCallback(() => setTooltip(null), []);
+
+  if (!text) {
+    return <span className="text-[#6a6a6a]">—</span>;
+  }
+
+  return (
+    <>
+      <div
+        ref={triggerRef}
+        className="max-w-full"
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
+        onFocus={showTooltip}
+        onBlur={hideTooltip}
+      >
+        <p className="truncate cursor-default text-[#6a6a6a]">{text}</p>
+      </div>
+      {tooltip &&
+        createPortal(
+          <div
+            role="tooltip"
+            style={{
+              position: "fixed",
+              left: tooltip.left,
+              top: tooltip.top,
+              transform: tooltip.placement === "top" ? "translateY(-100%)" : undefined,
+              maxWidth: Math.min(288, window.innerWidth - 32),
+            }}
+            className="z-[100] w-max rounded-xl border border-[#e5e5e5] bg-[#fffaf0] px-3 py-2 text-xs leading-relaxed text-[#0a0a0a] shadow-lg whitespace-normal wrap-break-word pointer-events-none"
+          >
+            {text}
+          </div>,
+          document.body
+        )}
+    </>
+  );
+}
 
 export function DataPageClient({
   entries,
@@ -305,8 +372,8 @@ export function DataPageClient({
                       "—"
                     )}
                   </TableCell>
-                  <TableCell className="py-2.5 text-sm text-[#6a6a6a] truncate">
-                    {entry.remark || "—"}
+                  <TableCell className="py-2.5 text-sm overflow-visible">
+                    <RemarkCell remark={entry.remark} />
                   </TableCell>
                   <TableCell className="py-2.5">
                     <div className="flex items-center gap-1">
