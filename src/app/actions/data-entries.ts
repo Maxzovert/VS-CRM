@@ -38,6 +38,7 @@ export async function getDataEntries(params: unknown) {
         { name: { contains: filters.search, mode: "insensitive" } },
         { businessName: { contains: filters.search, mode: "insensitive" } },
         { location: { contains: filters.search, mode: "insensitive" } },
+        { phone: { contains: filters.search, mode: "insensitive" } },
         { instagram: { contains: filters.search, mode: "insensitive" } },
         { website: { contains: filters.search, mode: "insensitive" } },
         { remark: { contains: filters.search, mode: "insensitive" } },
@@ -126,6 +127,7 @@ export async function importDataEntriesFromCsv(
     name: string;
     businessName: string | null;
     location: string | null;
+    phone: string | null;
     instagram: string | null;
     website: string | null;
     remark: string | null;
@@ -145,6 +147,7 @@ export async function importDataEntriesFromCsv(
       name: parsed.data.name,
       businessName: parsed.data.businessName || null,
       location: parsed.data.location || null,
+      phone: parsed.data.phone || null,
       instagram: parsed.data.instagram || null,
       website: parsed.data.website || null,
       remark: parsed.data.remark || null,
@@ -177,6 +180,7 @@ export async function exportDataEntriesCsv(): Promise<ActionResult<{ csv: string
       e.name,
       e.businessName ?? "",
       e.location ?? "",
+      e.phone ?? "",
       e.instagram ?? "",
       e.website ?? "",
       e.remark ?? "",
@@ -210,6 +214,7 @@ export async function transferDataEntryToLead(
       userId: session.userId,
       name: entry.name,
       companyName: entry.businessName || null,
+      phone: entry.phone || null,
       city: entry.location || null,
       website: normalizeWebsite(entry.website),
       notes: buildLeadNotes(entry.instagram),

@@ -55,6 +55,7 @@ const emptyForm: DataEntryInput = {
   name: "",
   businessName: "",
   location: "",
+  phone: "",
   instagram: "",
   website: "",
   remark: "",
@@ -98,6 +99,7 @@ export function DataPageClient({
       name: entry.name,
       businessName: entry.businessName ?? "",
       location: entry.location ?? "",
+      phone: entry.phone ?? "",
       instagram: entry.instagram ?? "",
       website: entry.website ?? "",
       remark: entry.remark ?? "",
@@ -235,7 +237,7 @@ export function DataPageClient({
 
       <div className="flex items-center gap-3 flex-wrap">
         <Input
-          placeholder="Search name, business, location..."
+          placeholder="Search name, business, phone, location..."
           className="h-11 w-72 rounded-xl border-[#e5e5e5] bg-[#fffaf0]"
           defaultValue={searchParams.get("search") ?? ""}
           onChange={(e) => {
@@ -253,22 +255,23 @@ export function DataPageClient({
       </div>
 
       <div className="clay-table-wrap">
-        <Table className="w-full table-fixed min-w-[900px]">
+        <Table className="w-full table-fixed min-w-[1000px]">
           <TableHeader>
             <TableRow className="bg-[#faf5e8] hover:bg-[#faf5e8]">
-              <TableHead className="text-xs font-semibold w-[14%]">Name</TableHead>
-              <TableHead className="text-xs font-semibold w-[14%]">Business Name</TableHead>
-              <TableHead className="text-xs font-semibold w-[14%]">Location</TableHead>
-              <TableHead className="text-xs font-semibold w-[12%]">Instagram</TableHead>
-              <TableHead className="text-xs font-semibold w-[14%]">Website</TableHead>
-              <TableHead className="text-xs font-semibold w-[16%]">Remark</TableHead>
-              <TableHead className="text-xs font-semibold w-[16%]">Actions</TableHead>
+              <TableHead className="text-xs font-semibold w-[12%]">Name</TableHead>
+              <TableHead className="text-xs font-semibold w-[12%]">Business Name</TableHead>
+              <TableHead className="text-xs font-semibold w-[11%]">Location</TableHead>
+              <TableHead className="text-xs font-semibold w-[11%]">Phone</TableHead>
+              <TableHead className="text-xs font-semibold w-[10%]">Instagram</TableHead>
+              <TableHead className="text-xs font-semibold w-[12%]">Website</TableHead>
+              <TableHead className="text-xs font-semibold w-[14%]">Remark</TableHead>
+              <TableHead className="text-xs font-semibold w-[18%]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {entries.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="py-12 text-center text-sm text-[#6a6a6a]">
+                <TableCell colSpan={8} className="py-12 text-center text-sm text-[#6a6a6a]">
                   No data yet. Add rows manually or import a CSV.
                 </TableCell>
               </TableRow>
@@ -281,6 +284,9 @@ export function DataPageClient({
                   </TableCell>
                   <TableCell className="py-2.5 text-sm text-[#6a6a6a] truncate">
                     {entry.location || "—"}
+                  </TableCell>
+                  <TableCell className="py-2.5 text-sm text-[#6a6a6a] truncate">
+                    {entry.phone || "—"}
                   </TableCell>
                   <TableCell className="py-2.5 text-sm text-[#6a6a6a] truncate">
                     {entry.instagram || "—"}
@@ -410,6 +416,16 @@ export function DataPageClient({
                 id="data-location"
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
+                className="h-11 rounded-xl"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="data-phone">Phone</Label>
+              <Input
+                id="data-phone"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                placeholder="+1 234 567 8900"
                 className="h-11 rounded-xl"
               />
             </div>
